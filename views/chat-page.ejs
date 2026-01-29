@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+  background-color: aliceblue;
+  font-family: 'Courier New', Courier, monospace;
+  }
+  a{
+    text-decoration: none;
+  }
+  .chat-bar>a>span{
+    font-size: 30px;
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  .username-btn{
+    width:100px;
+    height:100px;
+    border:0px;
+    border-radius:100px;
+    margin-left: 30px;
+    margin-top: 20px;
+    font-size: 30px;
+  }
+  .name{
+    margin-left: 370px;
+    margin-top: 20px;
+    font-size: 30px;
+   font-weight: bold;
+
+  }
+  .chat-body{
+    width:96.2%;
+    height: 500px;
+    border-radius: 20px;
+    overflow-y: auto;
+    margin-left: 20px;
+    margin-top: 20px;
+    background-color: antiquewhite;
+  }
+  .user-chat,.else-chat{
+    width:50.5%;
+    height: auto;
+    border-radius: 20px;
+    font-size: 20px;
+    margin-top: 20px;
+    
+
+  }
+  .user-chat{
+    margin-left: 20px;
+    background-color: greenyellow;
+    color:green
+  }
+  .else-chat{
+    margin-left:600px;
+    background-color: aliceblue;
+    color:gray
+  }
+  .username-btn-mini{
+    width:70px;
+    height:70px;
+    border-radius: 100px;
+    margin-top: 12px;
+    margin-left:12px;
+    border:0px;
+    font-size: 30px;
+  }
+  .chat-body>div>span{
+    margin-left: 20px;
+    font-size: 30px;
+  }
+  .chat-body>div>p{
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  form{
+    margin-top: 20px;
+    text-align: center;
+  }
+  form>input{
+    width:82.2%;
+    height: 50px;
+    font-size: 30px;
+    color:gray;
+    background-color:whitesmoke;
+    border:0px;
+    border-radius: 20px;
+  }
+  form>button{
+    width:auto;
+    height: 50px;
+    font-size: 30px;
+    border:0px;
+    background-color: gray;
+    color:aliceblue
+  }
+  
+  </style>
+</head>
+<body>
+<div class="chat-bar">
+<a href="/user-home-page">
+ <span><-</span>
+</a>
+<button class="username-btn" style="background-color: <%=reciepent.style.bgcolor%>;color:<%=reciepent.style.color%>;"><%=reciepent.username[0] %></button>
+<span class="name"><%=reciepent.username%></span>
+</div>
+<div class="chat-body">
+
+<% chat_list.forEach(chat_data => { %>
+<% if (chat_data.address==user.email) { %>
+ <div class="user-chat">
+  <button class="username-btn-mini" ><%=user.username[0] %></button>
+  <span>aku</span>
+  <hr/>
+  <p><%=chat_data.value %></p>
+ </div>
+ <% } else { %>
+  <div class="else-chat">
+  <button class="username-btn-mini"><%=reciepent.username[0] %></button>
+  <span><%=reciepent.username %></span>
+  <hr/>
+  <p><%=chat_data.value %></p>
+ </div>
+<% } %>
+<% }) %>
+
+
+</div>
+<form action="/chat-send" method="post">
+  <input type="hidden" name="chat_id" value="<%=chat.chat_information._id %>">
+  <input type="hidden" name="user_status" value="<%=status %>">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="hidden" name="user_name" value="<%=user.username %>">
+  <input type="text" name="chat_value" placeholder="isi chat">
+  <button>kirim</button>
+</form>
+<form action="/chat-delete" method="post" style="margin-top: 60px;">
+  <input type="hidden" name="chat_id" value="<%=chat.chat_information._id %>">
+  <button class="btn-delete">hapus</button>
+</form>
+
+</body>
+
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<style>
+body{
+  background-color: aliceblue;
+  font-family: 'Courier New', Courier, monospace;
+  }
+
+  a{
+  text-decoration: none;
+  }
+  .div-above{
+    display: flex;
+    text-align: center;
+  }
+  .username-btn{
+    width:60px;
+    height: 60px;
+    border: 0px;
+    margin-top: 14px;
+    border-radius: 100px;
+    font-size: 30px;
+
+  }
+  form{ 
+  margin-left: 50px;
+  margin-top: 20px;
+  margin-bottom:20px;
+  width:auto;
+  height: auto;
+  background-color:whitesmoke;
+  }
+  form>input{
+  width:700px;
+  height: 50px;
+  font-size: 30px;
+  border:0px;
+  border-radius: 20px;
+
+  }
+  .btn-bar,.btn-bar-selected{
+   width:49.2%;
+   height: 50px;
+   font-size: 30px;
+   border:0px;
+   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.btn-bar{
+  background-color: gray;
+  color:aliceblue
+}
+.btn-bar-selected{
+   background-color: aliceblue;
+   color:gray
+}
+.person-nav{
+ width:87.8%;
+ margin-left: 250px;
+ height: 560px;
+ overflow-y: auto;
+ background-color: aliceblue;
+ text-align: center;
+
+}
+.person-card{
+  width:50.5%;
+  height: auto;
+  margin-bottom: 40px;
+  text-align: left;
+  margin-left: 30px;
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+.person-card>button{
+  width:100px;
+  height: 100px;
+  border-radius: 100px;
+  font-size: 40px;
+  border:0px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.person-card{
+  margin-left: 50px;
+  font-size: 50px;
+}
+
+.chat-form{
+  width:auto;
+  height: auto;
+}
+.chat-form>input{
+  width:500px;
+  background-color: chartreuse;
+  color:green
+  
+}
+.chat-form>select,.chat-form>button{
+  width:240px;
+  height: 50px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  border-radius: 20px;
+  font-size: 30px;
+  border-color: green;
+}
+.chat-form>select{
+  background-color: beige;
+  color:green
+}
+.chat-form>button{
+  background-color: lightgreen;
+  color:green
+}
+
+</style>
+
+</head>
+
+<body>
+<% if (page=="person-beranda") { %>
+ <div class="div-above">
+<div>
+ <a href="/user-setting">
+   <button class="username-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+ </a>
+</div>
+ <form action="/search-person" method="post">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="text" name="search_input" placeholder="cari apa">
+ </form>
+<div style="margin-top: 20px;margin-left: 20px;">
+ <a href="/user-home-page">
+  <button class="btn-bar" style="width:150px">home</button>
+ </a>
+ <a href="/user-navigation-person">
+   <button class="btn-bar-selected" style="width:150px">beranda</button>
+ </a>
+ <a href="/user-friends-navigation">
+   <button class="btn-bar" style="width:150px">temanku</button>
+ </a>
+</div>
+</div>
+<div class="person-nav">
+<% person.forEach(data => { %>
+ <div class="person-card">
+  <button style="background-color: <%=data.style.bgcolor%>;color:<%=data.style.color%>;"><%=data.username[0] %></button>
+  <span><%=data.username %></span>
+  <hr/>
+  <form action="/chat-sending-process" method="post" class="chat-form">
+    <input type="hidden" name="user_id" value="<%=user._id %>">
+    <input type="hidden" name="user_name" value="<%=user.username %>">
+    <input type="hidden" name="user_email" value="<%=user.email %>">
+    <input type="hidden" name="reciepent_id" value="<%=data._id %>">
+    <input type="hidden" name="reciepent_name" value="<%=data.username %>">
+    <input type="text" name="chat_value" placeholder="mulai obrolan dengan <%=data.username %>"><br>
+ <select name="chat_type" >
+  <option value="none">tipe chat</option>
+  <option value="private-chat">chat pribadi</option>
+  <option value="public-chat">chat publik</option>
+ </select>
+ <button>kirim</button>
+  </form>
+ </div>
+
+
+<% }) %>
+
+
+</div>
+
+<% } %>
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+  body{
+  background-color: aliceblue;
+  font-family: 'Courier New', Courier, monospace;
+  }
+
+  a{
+  text-decoration: none;
+  }
+  .div-above{
+    display: flex;
+    text-align: center;
+  }
+  .username-btn{
+    width:60px;
+    height: 60px;
+    border: 0px;
+    margin-top: 14px;
+    border-radius: 100px;
+    font-size: 30px;
+
+  }
+  form{ 
+  margin-left: 50px;
+  margin-top: 20px;
+  margin-bottom:20px;
+  width:auto;
+  height: auto;
+  background-color:whitesmoke;
+  }
+  form>input{
+  width:500px;
+  height: 50px;
+  font-size: 30px;
+  border:0px;
+  border-radius: 20px;
+
+  }
+  
+  .user-profil-card{
+    width:98.9%;
+    height: auto;
+    border-radius:20px;
+    margin-left: 12px;
+    text-align: center;
+  }
+  .user-profil-card>a>.username-btn{
+    width:100px;
+    height: 100px;
+    font-size: 50px;
+  }
+  .user-profil-card>p{
+    font-size: 30px;
+  }
+  .user-profil-card>input{
+    width:88.8%l;
+    height: 50px;
+    border-radius: 20px;
+    font-size: 30px;
+    border: 0px;
+  }
+.user-profil-card>form{
+   width:auto;
+   height: auto;
+   border-radius: 20px;
+   margin-bottom: 30px;
+   margin-top: 30px;
+   background-color: lightgray;
+  
+  }
+  .user-profil-card>form>input{
+    width:66.9%;
+    height: 50px;
+    font-size: 30px;
+    margin-bottom: 30px;
+    background-color: azure;
+    font-family: monospace;
+  }
+.user-profil-card>form>button{
+  width:17.9%;
+  height: 50px;
+  border:0px;
+  border-radius: 20px;
+  font-size: 30px;
+}
+.bar-option{
+  text-align: center;
+}
+.btn-bar,.btn-bar-selected{
+   width:49.2%;
+   height: 50px;
+   font-size: 30px;
+   border:0px;
+   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.btn-bar{
+  background-color: gray;
+  color:aliceblue
+}
+.btn-bar-selected{
+   background-color: aliceblue;
+   color:gray
+}
+.chat-container{
+  width:100%;
+  height: auto;
+  display: flex;
+  margin-left: 20px;
+}
+.chat-send{
+  width:45.5%;
+  height:500px;
+  overflow-y: auto;
+  background-color:greenyellow;
+  border-radius: 20px;
+}
+.chat-send>div,.chat-accept>div{
+  margin-left: 20px;
+  width:89.2%;
+  height:auto;
+  border-radius: 20px;
+
+}
+
+.chat-accept{
+  width:45.5%;
+  height:500px;
+  overflow-y: auto;
+  background-color:lightgray;
+  border-radius: 20px;
+  margin-left: 20px;
+}
+  </style>
+</head>
+
+<body>
+<% if (page=="user-home") { %>
+<div class="div-above" style="margin-bottom: 20px;">
+<div>
+ <a href="/user-setting">
+   <button class="username-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+ </a>
+</div>
+ 
+<div style="margin-top: 20px;margin-left: 20px;">
+ <a href="/user-home-page">
+  <button class="btn-bar-selected" style="width:150px">home</button>
+ </a>
+ <a href="/user-navigation-person">
+   <button class="btn-bar" style="width:150px">beranda</button>
+ </a>
+ <a href="/user-friends-navigation">
+   <button class="btn-bar" style="width:150px">temanku</button>
+ </a>
+</div>
+</div>
+
+<div class="chat-container">
+
+<div class="chat-send">
+  <% chat.chat_send_private.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.reciepent.name[0] %></button>
+    <span><%=chat.reciepent.name %>|| pribadi</span>
+    <hr/>
+    <a href="/chat-open/<%=chat.chat_information._id %>/sender">
+      <p><%=chat.chat_list[0].value %></p>
+    </a>
+   </div>
+  <% }) %>
+  <% chat.chat_send_public.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.reciepent.name[0] %></button>
+    <span><%=chat.reciepent.name %>||publik</span>
+    <hr/>
+    <a href="/chat-open/<%=chat.chat_information._id %>/sender">
+      <p><%=chat.chat_list[0].value %></p>
+    </a>
+   </div>
+  <% }) %>
+</div>
+<div class="chat-accept">
+ <% chat.chat_reciepent_private.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.sender.name[0] %></button>
+    <span><%=chat.sender.name %>|| pribadi</span>
+    <hr/>
+    <a href="/chat-open/<%=chat.chat_information._id %>/reciepent">
+      <p><%=chat.chat_list[0].value %></p>
+    </a>
+   </div>
+  <% }) %>
+  <% chat.chat_reciepent_public.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.sender.name[0] %></button>
+    <span><%=chat.sender.name %>||publik</span>
+    <hr/>
+    <a href="/chat-open/<%=chat.chat_information._id %>/reciepent">
+      <p><%=chat.chat_list[0].value %></p>
+    </a>
+   </div>
+  <% }) %>
+
+</div>
+
+</div>
+<% } else if (page=='user-setting-page') { %>
+ <div class="user-profil-card">
+  <a href="/user-home-page">
+  <button class="username-btn" id="user-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+  </a>
+ <hr/>
+ <p>email:</p>
+ <input type="text" value="<%=user.email %>" disabled>
+ <hr/>
+ <form action="/user-username-update" method="post">
+
+  <input type="hidden" name="user_id" value="<%=user._id %>">
+  
+  <p style="font-size: 30px;">username:</p>
+  <input type="text" name="username_input" placeholder="<%=user.username %>">
+  <button>edit</button>
+ </form>
+ <hr/>
+ <form action="/change-user-style" method="post">
+  <p style="font-size: 30px;">warna tulisan dan latar belakang</p>
+  <input type="hidden" name="user_id" value="<%=user._id %>">
+  <input type="color" name="color_input" id="color-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.color %>">
+  <input type="color" name="bgcolor_input" id="bgcolor-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.bgcolor %>">
+  <button>edit</button> 
+</form>
+ </div>
+
+ <form action="/user-logout" method="post" style="text-align: center;" style="background-color: aliceblue;">
+  <button class="btn-bar" style="background-color: aliceblue;color:red">keluar</button>
+ </form>
+
+<% } %>
+<script>
+ let input={
+     color:document.getElementById("color-input-test"),
+     bgcolor:document.getElementById("bgcolor-input-test")
+ }
+ let output={
+    button:document.getElementById("user-btn")
+ }
+
+ input.color.addEventListener("input",function(){
+    output.button.style.color=input.color.value
+ })
+input.bgcolor.addEventListener("input",function(){
+    output.button.style.backgroundColor=input.bgcolor.value
+ })
+
+
+</script>
+</body>
+
+</html>

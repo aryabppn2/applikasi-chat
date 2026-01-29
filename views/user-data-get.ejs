@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<style>
+  body{
+     background-color: aliceblue;
+     font-family: 'Courier New', Courier, monospace;
+  }
+a{
+  text-decoration: none;
+}
+.user-bar{
+   text-align: center;
+   width:100%;
+   height: auto;
+}
+.btn-bar,.btn-bar-selected{
+   width:48.5%;
+   height: 50px;
+   border: 0px;
+   font-size: 30px;
+
+}
+.btn-bar{
+  background-color: gray;
+  color:aliceblue
+}
+.btn-bar-selected{
+  background-color: aliceblue;
+  color:gray
+}
+form{
+  text-align: center;
+  margin-top: 200px;
+}
+form>p{
+  margin-top: 50px;
+  color:gray;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+form>input{
+   width:98.9%;
+   height: 50px;
+   font-size: 30px;
+   margin-top: 20px;
+   border:0px;
+   background-color:aliceblue;
+   color:gray;
+   
+}
+
+form>button{
+  width:98.8%;
+  height: 50px;
+  margin-top: 30px;
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  border: 0px;
+  background-color: gray;
+  color:aliceblue;
+}
+</style>
+
+</head>
+
+<body>
+<% if (status=="start-register") { %>
+ <div class="user-bar">
+  <a href="/user-register">
+   <button class="btn-bar-selected">daftar</button>
+  </a>
+  <a href="/user-login-start">
+   <button class="btn-bar">masuk</button>
+  </a>
+ </div>
+
+ <form action="/user-register-process" method="post" >
+   <p>username:</p>
+   <input type="text" name="username_input" placeholder="masukan nama ">
+   <hr/>
+   <p>email:</p>
+   <input type="text" name="email_input" placeholder="masukan email">
+<hr/>
+<p>pasword:</p>
+<input type="text" name="password_input" placeholder="masukan password">
+<hr/>
+<button >daftarkan</button>
+
+
+ </form>
+
+<% } else if (status=='register-error') { %>
+ <div class="user-bar">
+  <a href="/user-register">
+   <button class="btn-bar-selected">daftar</button>
+  </a>
+  <a href="/user-login-start">
+   <button class="btn-bar">masuk</button>
+  </a>
+ </div>
+
+ <form action="/user-register-process" method="post" style="margin-top: 100px;" >
+   <h2 style="color:red"><%=error_messeage %></h2>
+   <hr/>
+   <p>username:</p>
+   <input type="text" name="username_input" placeholder="masukan nama ">
+   <hr/>
+   <p>email:</p>
+   <input type="text" name="email_input" placeholder="masukan email">
+<hr/>
+<p>password:</p>
+<input type="text" name="password_input" placeholder="masukan password">
+<hr/>
+<button >daftarkan</button>
+
+
+ </form>
+<% } else if (status=="user-login") { %>
+ <div class="user-bar">
+  <a href="/user-register">
+   <button class="btn-bar">daftar</button>
+  </a>
+  <a href="/user-login-start">
+   <button class="btn-bar-selected">masuk</button>
+  </a>
+ </div>
+<form action="/user-login-process" method="post">
+  <p>email:</p>
+  <input type="text" name="email_input" placeholder="masukan email">
+  <hr/>
+  <p>password:</p>
+  <input type="password" name="password_input" placeholder="masukan password">
+  <hr/>
+  <button>masuk</button>
+</form>
+<% } else if (status=="login-error") { %>
+  <div class="user-bar">
+  <a href="/user-register">
+   <button class="btn-bar">daftar</button>
+  </a>
+  <a href="/user-login-start">
+   <button class="btn-bar-selected">masuk</button>
+  </a>
+ </div>
+<form action="/user-login-process" method="post" style="margin-top: 100px;">
+  <h2 style="color:red"><%=error_messeage %></h2>
+  <p>email:</p>
+  <input type="text" name="email_input" placeholder="masukan email">
+  <hr/>
+  <p>password:</p>
+  <input type="password" name="password_input" placeholder="masukan password">
+  <hr/>
+  <button>masuk</button>
+</form>
+
+<% } %>
+
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+[
+  {
+    "sender": { "id": "69797778cf46f84525ed5937", "name": "Mak" },
+    "reciepent": { "id": "697769cb24aa8ee84b65c64e", "name": "Raja" },
+    "chat_information": {
+      "date": "28-January-2026",
+      "_id": "69797778cf46f84525ed5937697769cb24aa8ee84b65c64e28January2026friendsRequest",
+      "chat_type": "friends-request"
+    },
+    "chat_list": [
+      {
+        "address": "Maktiek@gmail.com",
+        "name": "Mak",
+        "value": "permisi saya herman mau tanya kos"
+      }
+    ]
+  },
+  {
+    "sender": { "id": "69797778cf46f84525ed5937", "name": "Mak" },
+    "reciepent": { "id": "697769cb24aa8ee84b65c64e", "name": "Raja" },
+    "chat_information": {
+      "date": "28-January-2026",
+      "_id": "69797778cf46f84525ed5937697769cb24aa8ee84b65c64e28January2026friendsRequest",
+      "chat_type": "friends-request"
+    },
+    "chat_list": [
+      {
+        "address": "Maktiek@gmail.com",
+        "name": "Mak",
+        "value": "permisi saya herman mau tanya kos"
+      }
+    ]
+  },
+  {
+    "sender": { "id": "69797778cf46f84525ed5937", "name": "Mak" },
+    "reciepent": { "id": "697769cb24aa8ee84b65c64e", "name": "Raja" },
+    "chat_information": {
+      "date": "29-January-2026",
+      "_id": "69797778cf46f84525ed5937697769cb24aa8ee84b65c64e29January2026friendsRequest",
+      "chat_type": "friends-request"
+    },
+    "chat_list": [
+      {
+        "address": "Maktiek@gmail.com",
+        "name": "Mak",
+        "value": "permisi saya herman mau tanya kos"
+      }
+    ]
+  },
+  {
+    "sender": { "id": "697769cb24aa8ee84b65c64e", "name": "Raja" },
+    "reciepent": { "id": "69797778cf46f84525ed5937", "name": "Mak" },
+    "chat_information": {
+      "date": "29-January-2026",
+      "_id": "697769cb24aa8ee84b65c64e69797778cf46f84525ed593729January2026friendsRequest",
+      "chat_type": "friends-request"
+    },
+    "chat_list": [{ "address": "Raja@gmail.com", "name": "Raja" }]
+  },
+  {
+    "sender": { "id": "697769cb24aa8ee84b65c64e", "name": "Raja" },
+    "reciepent": { "id": "6972e2d3e8d99f7acb0c39cc", "name": "Rama" },
+    "chat_information": {
+      "date": "29-January-2026",
+      "_id": "697769cb24aa8ee84b65c64e6972e2d3e8d99f7acb0c39cc29January2026friendsRequest",
+      "chat_type": "friends-request"
+    },
+    "chat_list": [{ "address": "Raja@gmail.com", "name": "Raja" }]
+  }
+]
