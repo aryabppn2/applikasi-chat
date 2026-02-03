@@ -126,7 +126,30 @@
   width:89.2%;
   height:auto;
   border-radius: 20px;
+  margin-top: 20px;
 
+}
+.chat-send>div{
+  background-color: lightgreen;
+  width:92.9%;
+  height: auto;
+
+}
+.chat-send>div>button{
+  margin-left: 30px;
+  background-color: aquamarine;
+  color:gray
+}
+.chat-send>div>span{
+  margin-left: 20px;
+  font-size: 30px;
+  color:green
+}
+.chat-send>div>a>p{
+  margin-left: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color:green
 }
 
 .chat-accept{
@@ -136,6 +159,102 @@
   background-color:lightgray;
   border-radius: 20px;
   margin-left: 20px;
+}
+.chat-accept>div{
+  width:92.9%;
+  height: auto;
+  background-color:whitesmoke;
+  color:gray
+}
+.chat-accept>div>button{
+  margin-left: 30px;
+  background-color: lightgray;
+  color:gray
+}
+.chat-accept>div>span{
+  margin-left: 20px;
+  font-size: 30px
+}
+.chat-accept>div>a>p{
+   margin-left: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color:gray
+}
+.option-friends-request{
+  display:flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  margin-left: 50px;
+
+}
+
+.option-friends-request>form>button{
+  width:120px;
+  height: 50px;
+  border:0px;
+  font-size: 20px;
+  
+}
+.person-nav{
+ width:87.8%;
+ margin-left: 250px;
+ height: 560px;
+ overflow-y: auto;
+ background-color: aliceblue;
+ text-align: center;
+
+}
+.person-card{
+  width:50.5%;
+  height: auto;
+  margin-bottom: 40px;
+  text-align: left;
+  margin-left: 30px;
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+.person-card>button{
+  width:100px;
+  height: 100px;
+  border-radius: 100px;
+  font-size: 40px;
+  border:0px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.person-card{
+  margin-left: 50px;
+  font-size: 50px;
+}
+
+.chat-form{
+  width:auto;
+  height: auto;
+}
+.chat-form>input{
+  width:500px;
+  background-color: chartreuse;
+  color:green
+  
+}
+.chat-form>select,.chat-form>button{
+  width:240px;
+  height: 50px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  border-radius: 20px;
+  font-size: 30px;
+  border-color: green;
+}
+.chat-form>select{
+  background-color: beige;
+  color:green
+}
+.chat-form>button{
+  background-color: lightgreen;
+  color:green
 }
   </style>
 </head>
@@ -153,10 +272,10 @@
  <a href="/user-home-page">
   <button class="btn-bar-selected" style="width:150px">home</button>
  </a>
- <a href="/user-navigation-person">
+ <a href="/user-navigation-all">
    <button class="btn-bar" style="width:150px">beranda</button>
  </a>
- <a href="/user-friends-navigation">
+ <a href="/user-friends-page">
    <button class="btn-bar" style="width:150px">temanku</button>
  </a>
 </div>
@@ -185,6 +304,18 @@
     </a>
    </div>
   <% }) %>
+   <%  chat.chat_friends_request_send.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.reciepent.name[0] %></button>
+    <span><%=chat.reciepent.name %>||publik</span>
+    <hr/>
+    <p style="margin-left: 20px;font-size: 30px;color:green"><%=chat.chat_list[0].value %></p>
+    <hr/>
+    <span>permintaan terkirim </span>
+   </div>
+
+   <% }) %>
+  
 </div>
 <div class="chat-accept">
  <% chat.chat_reciepent_private.forEach(chat => { %>
@@ -207,7 +338,33 @@
     </a>
    </div>
   <% }) %>
+<%  chat.chat_friends_request_reciepent.forEach(chat => { %>
+   <div class="chat-card">
+    <button class="username-btn"><%=chat.sender.name[0] %></button>
+    <span><%=chat.sender.name %>||ajak berteman</span>
+    <hr/>
+    <p style="margin-left:20px;font-size: 30px;color:gray;"><%=chat.chat_list[0].value %></p>
+    <hr/>
+    <div class="option-friends-request">
+      <form action="/user-accept-friends" method="post" class="form-accept-friends">
+      <input type="hidden" name="user_email" value="<%=user.email %>">
+      <input type="hidden" name="chat_id" value="<%=chat.chat_information._id %>">
+      <input type="hidden" name="friends_email"value="<%=chat.sender.email %>">
+      <button class="btn-accept" style="background-color: lightgreen;color:green">terima teman</button>
+    </form>
+     <form action="/user-reject-friends" method="post">
+      <input type="hidden" name="user_id" value="<%=user._id %>">
+      <input type="hidden" name="chat_id" value="<%=chat.chat_information._id %>">
+      <input type="hidden" name="friends_id" value="<%=chat.sender.email %>">
+      <button  style="background-color: rgb(164, 148, 148);color:red">tolak berteman</button> 
+    </form>
 
+    </div>
+
+   </div>
+
+   <% }) %>
+  
 </div>
 
 </div>
@@ -232,8 +389,8 @@
  <form action="/change-user-style" method="post">
   <p style="font-size: 30px;">warna tulisan dan latar belakang</p>
   <input type="hidden" name="user_id" value="<%=user._id %>">
-  <input type="color" name="color_input" id="color-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.color %>">
-  <input type="color" name="bgcolor_input" id="bgcolor-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.bgcolor %>">
+  <input type="color" name="color_input" id="color-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.style.color %>">
+  <input type="color" name="bgcolor_input" id="bgcolor-input-test" style="width:34.4%;margin-top: 20px;" value="<%=user.style.bgcolor %>">
   <button>edit</button> 
 </form>
  </div>
@@ -242,6 +399,50 @@
   <button class="btn-bar" style="background-color: aliceblue;color:red">keluar</button>
  </form>
 
+ <% } else if (page=="user-friends-page") { %>
+  <div class="div-above" style="margin-bottom: 20px;">
+<div>
+ <a href="/user-setting">
+   <button class="username-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+ </a>
+</div>
+ 
+<div style="margin-top: 20px;margin-left: 20px;">
+ <a href="/user-home-page">
+  <button class="btn-bar" style="width:150px">home</button>
+ </a>
+ <a href="/user-navigation-person">
+   <button class="btn-bar" style="width:150px">beranda</button>
+ </a>
+ <a href="/user-friends-page">
+   <button class="btn-bar-selected" style="width:150px">temanku</button>
+ </a>
+</div>
+</div>
+<div class="person-nav">
+ <% friends.forEach(data => { %>
+<div class="person-card">
+  <button ><%=data.username[0] %></button>
+  <span><%=data.username %></span>
+  <hr/>
+  <form action="/chat-sending-process" method="post" class="chat-form">
+    <input type="hidden" name="user_email" value="<%=user.email %>">
+    <input type="hidden" name="user_name" value="<%=user.username %>">
+    <input type="hidden" name="reciepent_email" value="<%=data.email %>">
+    <input type="hidden" name="reciepent_name" value="<%=data.username %>">
+    <input type="text" name="chat_value" placeholder="mulai obrolan dengan <%=data.username %>"><br>
+ <select name="chat_type" >
+  <option value="none">tipe chat</option>
+  <option value="private-chat">chat pribadi</option>
+  <option value="public-chat">chat publik</option>
+ </select>
+ <button>kirim</button>
+  </form>
+ </div>
+
+
+ <% }) %>
+</div>
 <% } %>
 <script>
  let input={

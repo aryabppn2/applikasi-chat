@@ -61,6 +61,7 @@ body{
 .person-nav{
  width:87.8%;
  margin-left: 250px;
+ margin-top: 20px;
  height: 560px;
  overflow-y: auto;
  background-color: aliceblue;
@@ -117,13 +118,66 @@ body{
   background-color: lightgreen;
   color:green
 }
+.div-sub-option{
+  width:100%;
+  height: auto;
+  text-align: left;
+  margin-top: 20px;
+}
+.div-sub-option>a{
+  margin-left: 30px;
+  font-size: 20px;
+  color:gray;
+  border-style: inline;
 
+}
+.div-sub-optiona>a:hover{
+  text-decoration: underline;
+  color:blanchedalmond;
+  background-color: honeydew;
+}
+.chat-navigation-public{
+  width:100%;
+  margin-left: 20px;
+  margin-top: 20px;
+  height: 560px;
+  overflow-y:auto ;
+  text-align: center;
+}
+.chat-card{
+  width:78.5%;
+  margin-left: 50px;
+  height: auto;
+  margin-top:30px;
+border-radius: 20px;
+  
+}
+.chat-card>button{
+  width:100px;
+  height: 100px;
+  font-size:50px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 100px;
+  background-color: gray;
+  color:aliceblue
+}
+.chat-card>span{
+  font-size: 50px;
+  margin-left: 30px;
+}
+.chat-card>a>span{
+  font-size: 40px;
+  margin-top: 20px;
+  margin-left: 12px;
+  color:gray
+}
 </style>
 
 </head>
 
 <body>
-<% if (page=="person-beranda") { %>
+<% if (page=="all-beranda") { %>
  <div class="div-above">
 <div>
  <a href="/user-setting">
@@ -132,7 +186,80 @@ body{
 </div>
  <form action="/search-person" method="post">
   <input type="hidden" name="user_email" value="<%=user.email %>">
-  <input type="text" name="search_input" placeholder="cari apa">
+  <input type="text" name="search_input" placeholder="cari teman baru">
+ </form>
+<div style="margin-top: 20px;margin-left: 20px;">
+ <a href="/user-home-page">
+  <button class="btn-bar" style="width:150px">home</button>
+ </a>
+ <a href="/user-navigation-all">
+   <button class="btn-bar-selected" style="width:150px">beranda</button>
+ </a>
+ <a href="/user-friends-page">
+   <button class="btn-bar" style="width:150px">temanku</button>
+ </a>
+</div>
+</div>
+<div class="div-sub-option">
+  <a href="/user-navigation-all"style="color:<%=user.style.bgcolor%>;background-color:<%=user.style.color%>">semua</a>
+  <a href="/user-navigation-person" >orang</a>
+  <a href="/user-navigation-chat-public">obrolan publik</a>
+</div>
+<div class="chat-navigation-public">
+   <% data.chat_public.forEach(chat => { %>
+ <% if (chat.sender.email==user.email) { %>
+  <div class="chat-card" style="background-color: greenyellow;color:green;text-align: left" >
+    <button class="username-btn" style="margin-left: 20px;"><%=chat.reciepent.name[0] %></button>
+  <span style="margin-left: 20px;"> <%=chat.reciepent.name %></span>
+<hr/>
+<a href="chat-open/<%=chat.chat_information._id %>/sender">
+   <span><%=chat.chat_information.chat_title %></span>
+</a>
+
+  </div>
+
+<% } else { %>
+ 
+<div class="chat-card" style="background-color: lightgray;color:gray;">
+    <button class="username-btn"><%=chat.sender.name[0] %></button>
+  <span> <%=chat.sender.name %></span>
+<hr/>
+<a href="chat-open/<%=chat.chat_information._id %>/reciepent">
+   <span><%=chat.chat_information.chat_title %></span>
+</a>
+
+  </div>
+ <% } %>
+
+<% }) %>
+</div>
+<div class="person-nav">
+  <% data.person.forEach(data => { %>
+ <div class="person-card">
+  <button style="background-color: <%=data.style.bgcolor%>;color:<%=data.style.color%>;"><%=data.username[0] %></button>
+  <span><%=data.username %></span>
+  <hr/>
+  <form action="/add-user-friends" method="post" class="chat-form" style="text-align: left;margin-left: 12px;">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="hidden" name="friends_email" value="<%=data.email %>">
+ <input type="text" name="chat_value" placeholder="isi perkenalanku" style="width: 50%;" >
+ <button>kirim</button>
+  </form>
+ </div>
+<% }) %>
+
+</div>
+
+<% }else if (page=="person-beranda") { %>
+ <div class="div-above">
+<div>
+ <a href="/user-setting">
+   <button class="username-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+ </a>
+</div>
+ <form action="/search-person" method="post">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="text" name="search_input" placeholder="cari teman baru">
  </form>
 <div style="margin-top: 20px;margin-left: 20px;">
  <a href="/user-home-page">
@@ -141,10 +268,15 @@ body{
  <a href="/user-navigation-person">
    <button class="btn-bar-selected" style="width:150px">beranda</button>
  </a>
- <a href="/user-friends-navigation">
+ <a href="/user-friends-page">
    <button class="btn-bar" style="width:150px">temanku</button>
  </a>
 </div>
+</div>
+<div class="div-sub-option">
+  <a href="/user-navigation-all">semua</a>
+  <a href="/user-navigation-person" style="color:<%=user.style.bgcolor%>;background-color:<%=user.style.color%>" >orang</a>
+  <a href="/user-navigation-chat-public">obrolan publik</a>
 </div>
 <div class="person-nav">
 <% person.forEach(data => { %>
@@ -152,18 +284,10 @@ body{
   <button style="background-color: <%=data.style.bgcolor%>;color:<%=data.style.color%>;"><%=data.username[0] %></button>
   <span><%=data.username %></span>
   <hr/>
-  <form action="/chat-sending-process" method="post" class="chat-form">
-    <input type="hidden" name="user_id" value="<%=user._id %>">
-    <input type="hidden" name="user_name" value="<%=user.username %>">
-    <input type="hidden" name="user_email" value="<%=user.email %>">
-    <input type="hidden" name="reciepent_id" value="<%=data._id %>">
-    <input type="hidden" name="reciepent_name" value="<%=data.username %>">
-    <input type="text" name="chat_value" placeholder="mulai obrolan dengan <%=data.username %>"><br>
- <select name="chat_type" >
-  <option value="none">tipe chat</option>
-  <option value="private-chat">chat pribadi</option>
-  <option value="public-chat">chat publik</option>
- </select>
+  <form action="/add-user-friends" method="post" class="chat-form" style="text-align: left;margin-left: 12px;">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="hidden" name="friends_email" value="<%=data.email %>">
+ <input type="text" name="chat_value" placeholder="isi perkenalanku" style="width: 50%;" >
  <button>kirim</button>
   </form>
  </div>
@@ -173,6 +297,67 @@ body{
 
 
 </div>
+<% } else if (page=="chat-public-beranda") { %>
+ <div class="div-above">
+<div>
+ <a href="/user-setting">
+   <button class="username-btn" style="color:<%=user.style.color%>;background-color:<%=user.style.bgcolor%>"><%=user.username[0] %></button>
+ </a>
+</div>
+ <form action="/search-chat-public" method="post">
+  <input type="hidden" name="user_email" value="<%=user.email %>">
+  <input type="text" name="search_input" placeholder="cari chat yang membahs tentang apa">
+ </form>
+<div style="margin-top: 20px;margin-left: 20px;">
+ <a href="/user-home-page">
+  <button class="btn-bar" style="width:150px">home</button>
+ </a>
+ <a href="/user-navigation-person">
+   <button class="btn-bar-selected" style="width:150px">beranda</button>
+ </a>
+ <a href="/user-friends-page">
+   <button class="btn-bar" style="width:150px">temanku</button>
+ </a>
+</div>
+</div>
+<div class="div-sub-option">
+  <a href="/user-navigation-all">semua</a>
+  <a href="/user-navigation-person"  >orang</a>
+  <a href="/user-navigation-chat-public" style="color:<%=user.style.bgcolor%>;background-color:<%=user.style.color%>">obrolan publik</a>
+</div>
+<div class="chat-navigation-public" >
+<% chat_public.forEach(chat => { %>
+ <% if (chat.sender.email==user.email) { %>
+  <div class="chat-card" style="background-color: greenyellow;color:green;text-align: left" >
+    <button class="username-btn" style="margin-left: 20px;"><%=chat.reciepent.name[0] %></button>
+  <span style="margin-left: 20px;"> <%=chat.reciepent.name %></span>
+<hr/>
+<a href="chat-open/<%=chat.chat_information._id %>/sender">
+   <span><%=chat.chat_information.chat_title %></span>
+</a>
+
+  </div>
+
+<% } else { %>
+ 
+<div class="chat-card" style="background-color: lightgray;color:gray;">
+    <button class="username-btn"><%=chat.sender.name[0] %></button>
+  <span> <%=chat.sender.name %></span>
+<hr/>
+<a href="chat-open/<%=chat.chat_information._id %>/reciepent">
+   <span><%=chat.chat_information.chat_title %></span>
+</a>
+
+  </div>
+ <% } %>
+
+<% }) %>
+
+
+
+</div>
+
+
 
 <% } %>
 </body>

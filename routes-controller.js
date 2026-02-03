@@ -33,6 +33,8 @@ const {
   chat_data,
   chat_Sending,
   chat_delete,
+  chat_public_get,
+  search_chat_public
 } = require(process.env.chat_model);
 const { time, day } = require(process.env.time_file);
 // user controller
@@ -132,17 +134,27 @@ http.get("/user-home-page", UserIsLogin, async (input, output) => {
     chat: {
       chat_send_private: show_chat_sender(
         "private-chat",
-        input.session.user.id,
+        input.session.user.email,
       ),
-      chat_send_public: show_chat_sender("public-chat", input.session.user.id),
+      chat_send_public: show_chat_sender("public-chat", input.session.user.email),
+
       chat_reciepent_private: show_chat_recipent(
         "private-chat",
-        input.session.user.id,
+        input.session.user.email,
       ),
       chat_reciepent_public: show_chat_recipent(
         "public-chat",
-        input.session.user.id,
+        input.session.user.email,
       ),
+      chat_friends_request_send:show_chat_sender(
+        "friends-request",
+        input.session.user.email
+      ),
+      chat_friends_request_reciepent:show_chat_recipent(
+        "friends-request",
+        input.session.user.email
+      )
+    
     },
   });
 });
@@ -180,6 +192,38 @@ http.post("/change-user-style", async function (input, output) {
   output.redirect("/user-setting");
 });
 
+http.get('/user-friends-page',UserIsLogin,async(input,output)=>{
+  const userData=await User.findOne({email:input.session.user.email})
+  output.render('user-page',{
+    page:"user-friends-page",
+    user:userData,
+    friends:userData ? userData.friends : []
+  })
+})
+
+http.get('/user-navigation-all',UserIsLogin,async(input,output)=>{
+   output.render('beranda-page',{
+      page:'all-beranda',
+      user:await User.findOne({email:input.session.user.email}),
+      data:{
+          person:await User.find({email:{$ne:input.session.user.email}}),
+          chat_public:chat_public_get()
+      }
+   })
+})
+
+http.post('/search-all',UserIsLogin,async (input,output)=>{
+  output.render('beranda-page',{
+    page:'all-beranda',
+    user:await User.findOne({email:input.session.user.email}),
+    data:{
+      person:await User.find({username:input.body.search_input,email:{$ne:input.session.user.email}}),
+      chat_public:search_chat_public(chat_public_get(),input.body.search_input)
+    }
+  })
+})
+
+
 http.get("/user-navigation-person", UserIsLogin, async (input, output) => {
   output.render("beranda-page", {
     page: "person-beranda",
@@ -187,29 +231,50 @@ http.get("/user-navigation-person", UserIsLogin, async (input, output) => {
     person: await User.find({ email: { $ne: input.session.user.email } }),
   });
 });
+http.get('/user-navigation-chat-public',UserIsLogin,async (input,output)=>{
+  output.render('beranda-page',{
+    page:'chat-public-beranda',
+    user:await User.findOne({email:input.session.user.email}),
+    chat_public:chat_public_get()
+  })
+})
+
 
 http.post("/search-person", UserIsLogin, async (input, output) => {
   output.render("beranda-page", {
     page: "person-beranda",
     user: await User.findOne({ email: input.session.user.email }),
-    person: await User.find({ username: input.body.search_input }),
+    person: await User.find({ username: input.body.search_input,email:{$ne:input.session.user.email} }),
   });
 });
 
+http.post("/search-chat-public",UserIsLogin,async  (input,output)=>{
+  output.render('beranda-page',{
+    page:"chat-public-beranda",
+    user:await User.findOne({email:input.session.user.email}),
+    chat_public:search_chat_public(chat_public_get(),input.body.search_input)
+  })
+})
+
 http.post("/chat-sending-process", async function (input, output) {
+  const data={
+     user:await User.findOne({email:input.body.user_email}),
+     reciepent:await User.findOne({email:input.body.reciepent_email})
+  }
   await chat_sending({
-    sender: { id: input.body.user_id, name: input.body.user_name },
-    reciepent: { id: input.body.reciepent_id, name: input.body.reciepent_name },
+    sender: { email: input.body.user_email, name: input.body.user_name },
+    reciepent: { email: input.body.reciepent_email, name: input.body.reciepent_name },
     chat_information: {
       date: `${day.d}-${day.m}-${day.y}`,
-      _id: `${input.body.user_id}${input.body.reciepent_id}${day.d}${day.m}${day.y}${input.body.chat_value}`,
+      _id: `${data.user._id}${data.reciepent._id}${day.d}${day.m}${day.y}${input.body.chat_value}`,
       chat_type: input.body.chat_type,
+      chat_title:input.body.chat_value
     },
     chat_list: [
       {
         address: input.body.user_email,
         name: input.body.user_name,
-        value: input.body.chat_value,
+        value: input.body.chat_value
       },
     ],
   });
@@ -218,25 +283,27 @@ http.post("/chat-sending-process", async function (input, output) {
 });
 
 http.get("/chat-open/:chat_id/:status", UserIsLogin, async (input, output) => {
-  if (input.params.status == "sender") {
-    output.render("chat-page", {
-      chat: chat_data(input.params.chat_id),
-      user: await User.findOne({ email: input.session.user.email }),
-      reciepent: await User.findById(
-        chat_data(input.params.chat_id).reciepent.id,
-      ),
-      chat_list: chat_data(input.params.chat_id).chat_list,
-      status: input.params.status,
-    });
-  } else {
-    output.render("chat-page", {
-      chat: chat_data(input.params.chat_id),
-      user: await User.findOne({ email: input.session.user.email }),
-      reciepent: await User.findById(chat_data(input.params.chat_id).sender.id),
-      chat_list: chat_data(input.params.chat_id).chat_list,
-      status: input.params.status,
-    });
+  const chat=chat_data(input.params.chat_id)
+
+  if(input.params.status=="sender"){
+   output.render('chat-page',{
+     chat,
+     user:await User.findOne({email:input.session.user.email}),
+     reciepent:await User.findOne({email:chat.reciepent.email}),
+     chat_list:chat.chat_list,
+     status:"sender"
+   })
   }
+  else{
+     output.render("chat-page",{
+      chat,
+      user:await User.findOne({email:input.session.user.email}),
+      reciepent:await User.findOne({email:chat.sender.email}),
+      chat_list:chat.chat_list,
+      status:"reciepent"
+     })
+  }
+  
 });
 
 http.post("/chat-send", async function (input, output) {
@@ -248,6 +315,27 @@ http.post("/chat-send", async function (input, output) {
 
   output.redirect(`/chat-open/${input.body.chat_id}/${input.body.user_status}`);
 });
+
+http.get('/chat-sharing-process/:chat_id',UserIsLogin,async(input,output)=>{
+  const chat=chat_data(input.params.chat_id) 
+  output.render('chat-sharing-page',{
+     chat,
+     user:await User.findOne({email:input.session.user.email}),
+     chat_share_option:{
+       whatsapp:`/chat-sharing-whatsapp/${input.params.chat_id}`,
+       instagram:`/chat-sharing-instagram/${input.params.chat_id}`,
+       email:'/chat-sharing-email/${input.params.chat_id}'
+     }
+   })
+})
+
+
+
+
+
+
+
+
 
 http.post("/chat-delete", function (input, output) {
   chat_delete(input.body.chat_id);
@@ -270,8 +358,8 @@ http.post("/add-user-friends", async function (input, output) {
   );
 
   await chat_sending({
-    sender: { id: user_get._id, name: user_get.username },
-    reciepent: { id: friends_get._id, name: friends_get.username },
+    sender: { email: user_get.email, name: user_get.username },
+    reciepent: { email: friends_get.email, name: friends_get.username},
     chat_information: {
       date: `${day.d}-${day.m}-${day.y}`,
       _id: `${user_get._id}${friends_get._id}${day.d}${day.m}${day.y}friendsRequest`,
@@ -290,19 +378,19 @@ http.post("/add-user-friends", async function (input, output) {
 });
 
 http.post("/user-accept-friends", async function (input, output) {
-  const user_get = await User.findById(input.body.user_id);
-  const friends_get = await User.findById(input.body.friends_id);
+  const user_get = await User.findOne({email:input.body.user_email});
+  const friends_get = await User.findOne({email:input.body.friends_email});
 
   await User.findByIdAndUpdate(
     friends_get._id,
     {
       $push: {
-        friends: { email: user_get.email, username: user_get.username },
+        friends: { email: user_get.email, username: user_get.username},
       },
     },
     { new: true },
   );
-
+   chat_delete(input.body.chat_id)
   output.redirect("/user-friends-page");
 });
 
@@ -314,8 +402,13 @@ http.post('/user-reject-friends',async function(input,output){
     {_id:user._id},
     {$pull:{friends:{email:friends.email}}}
   )
+ chat_delete(input.body.chat_id)
  output.redirect('/user-friends-page')
 })
+
+
+
+
 
 http.post("/user-logout", (input, output) => {
   input.session.destroy((err) => {

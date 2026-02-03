@@ -42,6 +42,7 @@
     margin-left: 20px;
     margin-top: 20px;
     background-color: antiquewhite;
+    scrollbar-width: none;
   }
   .user-chat,.else-chat{
     width:50.5%;
@@ -109,7 +110,7 @@
 <a href="/user-home-page">
  <span><-</span>
 </a>
-<button class="username-btn" style="background-color: <%=reciepent.style.bgcolor%>;color:<%=reciepent.style.color%>;"><%=reciepent.username[0] %></button>
+<button class="username-btn"><%=reciepent.username[0] %></button>
 <span class="name"><%=reciepent.username%></span>
 </div>
 <div class="chat-body">
@@ -124,8 +125,8 @@
  </div>
  <% } else { %>
   <div class="else-chat">
-  <button class="username-btn-mini"><%=reciepent.username[0] %></button>
-  <span><%=reciepent.username %></span>
+  <button class="username-btn-mini"><%=chat_data.name[0] %></button>
+  <span><%=chat_data.name %></span>
   <hr/>
   <p><%=chat_data.value %></p>
  </div>
